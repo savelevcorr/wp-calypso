@@ -184,14 +184,6 @@ export class SecurePaymentForm extends Component {
 			transaction.payment.paymentMethod = 'WPCOM_Billing_Ebanx';
 		}
 
-		try {
-			await this.maybeSetSiteToPublic( { cart } );
-		} catch ( e ) {
-			debug( 'Error setting site to public', e );
-			displayError();
-			return;
-		}
-
 		submit(
 			{
 				cart,
@@ -259,8 +251,16 @@ export class SecurePaymentForm extends Component {
 		}
 	}
 
-	finishIfLastStep( cart, selectedSite, step ) {
+	async finishIfLastStep( cart, selectedSite, step ) {
 		if ( ! step.last || step.error ) {
+			return;
+		}
+
+		try {
+			await this.maybeSetSiteToPublic( { cart } );
+		} catch ( e ) {
+			debug( 'Error setting site to public', e );
+			displayError();
 			return;
 		}
 
