@@ -298,7 +298,7 @@ const sections = [
 	// this MUST be the first section for /read paths so subsequent sections under /read can override settings
 	{
 		name: 'reader',
-		paths: [ '/', '/read' ],
+		paths: [ '/read' ],
 		module: 'reader',
 		secondary: true,
 		group: 'reader',
@@ -459,7 +459,7 @@ const sections = [
 	},
 	{
 		name: 'home',
-		paths: [ '/home' ],
+		paths: [ '/', '/home' ],
 		module: 'my-sites/customer-home',
 		secondary: true,
 		group: 'sites',
