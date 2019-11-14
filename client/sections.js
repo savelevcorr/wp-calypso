@@ -459,7 +459,7 @@ const sections = [
 	},
 	{
 		name: 'home',
-		paths: [ '/', '/home' ],
+		paths: [ '/home' ],
 		module: 'my-sites/customer-home',
 		secondary: true,
 		group: 'sites',
@@ -470,6 +470,12 @@ const sections = [
 		module: 'my-sites/hosting',
 		secondary: true,
 		group: 'sites',
+	},
+	{
+		name: 'root',
+		paths: [ '/' ],
+		module: 'root',
+		secondary: false,
 	},
 ];
 
