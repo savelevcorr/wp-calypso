@@ -128,6 +128,20 @@ const loggedOutMiddleware = currentUser => {
 	}
 };
 
+const loggedInMiddleware = currentUser => {
+	if ( ! currentUser.get() ) {
+		return;
+	}
+
+	page( '/', context => {
+		let redirectPath = '/read';
+		if ( context.querystring ) {
+			redirectPath += `?${ context.querystring }`;
+		}
+		page.redirect( redirectPath );
+	} );
+};
+
 const oauthTokenMiddleware = () => {
 	if ( config.isEnabled( 'oauth' ) ) {
 		const loggedOutRoutes = [
@@ -251,6 +265,7 @@ export const setupMiddlewares = ( currentUser, reduxStore ) => {
 	setupContextMiddleware( reduxStore );
 	oauthTokenMiddleware();
 	loggedOutMiddleware( currentUser );
+	loggedInMiddleware( currentUser );
 	loadSectionsMiddleware();
 	setRouteMiddleware();
 	clearNoticesMiddleware();
