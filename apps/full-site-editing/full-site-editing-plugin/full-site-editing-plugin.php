@@ -240,7 +240,21 @@ function load_global_styles() {
 add_action( 'plugins_loaded', __NAMESPACE__ . '\load_global_styles' );
 
 /**
- * Inserts default full site editing data for current theme on plugin/theme activation.
+ * Load Event Countdown Block
+ */
+add_action( 'plugins_loaded', function() {
+	require_once __DIR__ . '/event-countdown-block/index.php';
+} );
+
+/**
+ * Load Timeline Block
+ */
+add_action( 'plugins_loaded', function() {
+	require_once __DIR__ . '/jetpack-timeline/index.php';
+} );
+
+/**
+ * Inserts default full site editing data for current theme during plugin activation.
  *
  * We put this here outside of the normal FSE class because FSE is not active
  * until the template parts are inserted. This makes sure we insert the template
