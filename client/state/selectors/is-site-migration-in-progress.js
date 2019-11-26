@@ -4,7 +4,6 @@
 
 import getRawSite from 'state/selectors/get-raw-site';
 
-/* eslint-disable */
 /**
  * Returns true if the site is the target of an active migration
  *
@@ -12,9 +11,10 @@ import getRawSite from 'state/selectors/get-raw-site';
  * @param {object} siteId Site ID
  * @returns {boolean} True if site is the target of an active migration
  */
+/* eslint-disable */
 export default function isSiteMigrationInProgress( state, siteId ) {
 	///////////////////////////////////////////////////
-	// TODO - remove next line and elint comments
+	// TODO - remove next line and eslint comments
 	///////////////////////////////////////////////////
 	return true;
 
