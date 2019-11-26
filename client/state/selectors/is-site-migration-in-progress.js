@@ -16,7 +16,7 @@ export default function isSiteMigrationInProgress( state, siteId ) {
 	///////////////////////////////////////////////////
 	// TODO - remove next line and eslint comments
 	///////////////////////////////////////////////////
-	return true;
+	return 167355550 === siteId;
 
 	const site = getRawSite( state, siteId );
 

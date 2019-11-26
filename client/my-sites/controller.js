@@ -209,9 +209,9 @@ function onSelectedSiteAvailable( context, basePath ) {
 	const calypsoify = isAtomicSite && config.isEnabled( 'calypsoify/plugins' );
 
 	// If migration is in progress, only /migrate paths should be loaded for the site
-	const isActiveMigration = isSiteMigrationInProgress( state, selectedSite.ID );
+	const isMigrationInProgress = isSiteMigrationInProgress( state, selectedSite.ID );
 
-	if ( isActiveMigration && ! startsWith( context.pathname, '/migrate/' ) ) {
+	if ( isMigrationInProgress && ! startsWith( context.pathname, '/migrate/' ) ) {
 		page.redirect( `/migrate/${ selectedSite.slug }` );
 		return false;
 	}
@@ -454,7 +454,7 @@ export function navigation( context, next ) {
  * Middleware that adds the site selector screen to the layout.
  *
  * @param {object} context -- Middleware context
- * @param {function} next -- Call next middleware in chain
+ * @param {Function} next -- Call next middleware in chain
  */
 export function sites( context, next ) {
 	if ( context.query.verified === '1' ) {
