@@ -36,6 +36,7 @@ import getPrimarySiteId from 'state/selectors/get-primary-site-id';
 import hasJetpackSites from 'state/selectors/has-jetpack-sites';
 import isDomainOnlySite from 'state/selectors/is-domain-only-site';
 import isSiteAutomatedTransfer from 'state/selectors/is-site-automated-transfer';
+import isSiteMigrationInProgress from 'state/selectors/is-site-migration-in-progress';
 import {
 	getCustomizerUrl,
 	getSite,
@@ -688,6 +689,10 @@ export class MySitesSidebar extends Component {
 			);
 		}
 
+		if ( this.props.isSiteMigrationInProgress ) {
+			return <SidebarMenu />;
+		}
+
 		const tools = !! this.tools() || !! this.marketing() || !! this.earn() || !! this.activity();
 		const manage = !! this.upgrades() || !! this.users() || !! this.siteSettings();
 
@@ -808,6 +813,7 @@ function mapStateToProps( state ) {
 		isToolsSectionOpen,
 		isManageSectionOpen,
 		isAtomicSite: !! isSiteAutomatedTransfer( state, selectedSiteId ),
+		isSiteMigrationInProgress: !! isSiteMigrationInProgress( state, selectedSiteId ),
 		isVip: isVipSite( state, selectedSiteId ),
 		showCustomizerLink: ! isSiteUsingFullSiteEditing( state, selectedSiteId ),
 		siteId,
