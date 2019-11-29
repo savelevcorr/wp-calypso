@@ -153,7 +153,13 @@ export default function() {
 		clientRender
 	);
 
-	page( paths.domainManagementRoot(), siteSelection, sites, makeLayout, clientRender );
+	page(
+		paths.domainManagementRoot(),
+		...getCommonHandlers( { noSitePath: false } ),
+		domainManagementController.domainManagementListAllSites,
+		makeLayout,
+		clientRender
+	);
 
 	page(
 		paths.domainManagementList( ':site' ),

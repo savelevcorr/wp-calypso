@@ -335,13 +335,14 @@ export class MySitesSidebar extends Component {
 
 	upgrades() {
 		const { path, translate, canUserManageOptions } = this.props;
-		const domainsLink = '/domains/manage' + this.props.siteSuffix;
 
-		if ( ! this.props.siteId ) {
-			return null;
+		let domainsLink = '/domains/manage';
+
+		if ( this.props.siteSuffix ) {
+			domainsLink += this.props.siteSuffix;
 		}
 
-		if ( ! canUserManageOptions ) {
+		if ( this.props.siteId && ! canUserManageOptions ) {
 			return null;
 		}
 
@@ -704,7 +705,6 @@ export class MySitesSidebar extends Component {
 		}
 
 		const tools = !! this.tools() || !! this.marketing() || !! this.earn() || !! this.activity();
-		const manage = !! this.upgrades() || !! this.users() || !! this.siteSettings();
 
 		return (
 			<div className="sidebar__menu-wrapper">
@@ -752,7 +752,7 @@ export class MySitesSidebar extends Component {
 					</ExpandableSidebarMenu>
 				) }
 
-				{ manage && (
+				{
 					<ExpandableSidebarMenu
 						onClick={ this.toggleSection( SIDEBAR_SECTION_MANAGE ) }
 						expanded={ this.props.isManageSectionOpen }
@@ -766,7 +766,7 @@ export class MySitesSidebar extends Component {
 							{ this.siteSettings() }
 						</ul>
 					</ExpandableSidebarMenu>
-				) }
+				}
 
 				{ this.wpAdmin() }
 			</div>
