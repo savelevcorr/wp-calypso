@@ -54,7 +54,7 @@ export default {
 	},
 
 	domainManagementListAllSites( pageContext, next ) {
-		pageContext.primary = <div>figure out how to call &lt;DomainManagementData for every site</div>;
+		pageContext.primary = <DomainManagement.ListAll />;
 		next();
 	},
 
