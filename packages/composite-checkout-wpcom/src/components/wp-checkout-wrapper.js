@@ -25,6 +25,7 @@ export function WPCheckoutWrapper( {
 	useShoppingCart,
 	availablePaymentMethods,
 	registry,
+	siteId,
 	onSuccess,
 	onFailure,
 } ) {
@@ -49,7 +50,11 @@ export function WPCheckoutWrapper( {
 			paymentMethods={ availablePaymentMethods }
 			registry={ registry }
 		>
-			<WPCheckout deleteItem={ deleteItem } changePlanLength={ changePlanLength } />
+			<WPCheckout
+				deleteItem={ deleteItem }
+				changePlanLength={ changePlanLength }
+				siteId={ siteId }
+			/>
 		</CheckoutProvider>
 	);
 }
@@ -58,4 +63,7 @@ WPCheckoutWrapper.propTypes = {
 	availablePaymentMethods: PropTypes.arrayOf( PropTypes.object ).isRequired,
 	useShoppingCart: PropTypes.func.isRequired,
 	registry: PropTypes.object.isRequired,
+	onSuccess: PropTypes.func.isRequired,
+	onFailure: PropTypes.func.isRequired,
+	siteId: PropTypes.oneOfType( [ PropTypes.string, PropTypes.number ] ),
 };

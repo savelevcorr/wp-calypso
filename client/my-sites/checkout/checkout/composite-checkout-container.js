@@ -125,7 +125,7 @@ export function isApplePayAvailable() {
 
 const availablePaymentMethods = [ applePayMethod, stripeMethod, paypalMethod ].filter( Boolean );
 
-export default function CompositeCheckoutContainer() {
+export default function CompositeCheckoutContainer( { siteId } ) {
 	const translate = useTranslate();
 	const onSuccess = () => {
 		debug( 'success' );
@@ -143,6 +143,7 @@ export default function CompositeCheckoutContainer() {
 			useShoppingCart={ useShoppingCart }
 			availablePaymentMethods={ availablePaymentMethods }
 			registry={ registry }
+			siteId={ siteId }
 			onSuccess={ onSuccess }
 			onFailure={ onFailure }
 		/>
