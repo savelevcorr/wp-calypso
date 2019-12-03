@@ -62,7 +62,7 @@ const initialCart = {
 };
 
 const registry = createRegistry();
-const { registerStore } = registry;
+const { registerStore, select } = registry;
 
 const wpcom = wp.undocumented();
 
@@ -83,6 +83,11 @@ async function sendStripeTransaction() {
 }
 
 const stripeMethod = createStripeMethod( {
+	getSiteId: () => select( 'wpcom' )?.getSiteId?.(),
+	getCountry: () => select( 'wpcom' )?.getContactInfo?.()?.country?.value,
+	getPostalCode: () => select( 'wpcom' )?.getContactInfo?.()?.postalCode?.value,
+	getPhoneNumber: () => select( 'wpcom' )?.getContactInfo?.()?.phoneNumber?.value,
+	getSubdivisionCode: () => select( 'wpcom' )?.getContactInfo?.()?.state?.value,
 	registerStore,
 	fetchStripeConfiguration,
 	sendStripeTransaction,
