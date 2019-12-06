@@ -1,10 +1,9 @@
 /**
  * External dependencies
  */
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { localize } from 'i18n-calypso';
+import { localize, LocalizeProps } from 'i18n-calypso';
 import { filter, get, includes, noop } from 'lodash';
 import classNames from 'classnames';
 import Gridicon from 'components/gridicon';
@@ -32,6 +31,13 @@ import WarningList from './warning-list';
  */
 import './style.scss';
 
+interface ExternalProps {
+	backUrl: string;
+	onProceed: () => void;
+}
+
+type Props = ExternalProps & ReturnType< typeof mergeProps > & LocalizeProps;
+
 export const EligibilityWarnings = ( {
 	backUrl,
 	context,
@@ -47,7 +53,7 @@ export const EligibilityWarnings = ( {
 	sitePlan,
 	siteSlug,
 	translate,
-} ) => {
+}: Props ) => {
 	const warnings = get( eligibilityData, 'eligibilityWarnings', [] );
 
 	const listHolds = filter(
@@ -64,10 +70,12 @@ export const EligibilityWarnings = ( {
 		const description = translate(
 			'Also get unlimited themes, advanced customization, no ads, live chat support, and more.'
 		);
-		const title = translate( 'Business plan required' );
-		const plan = findFirstSimilarPlanKey( sitePlan.product_slug, {
-			type: TYPE_BUSINESS,
-		} );
+		const title = translate( 'Business plan required' ) as string;
+		const plan =
+			sitePlan &&
+			findFirstSimilarPlanKey( sitePlan.product_slug, {
+				type: TYPE_BUSINESS,
+			} );
 		let feature = null;
 		let event = null;
 
@@ -102,7 +110,7 @@ export const EligibilityWarnings = ( {
 			{ businessUpsellBanner }
 
 			{ ( isPlaceholder || listHolds.length > 0 ) && (
-				<HoldList holds={ listHolds } isPlaceholder={ isPlaceholder } siteSlug={ siteSlug } />
+				<HoldList holds={ listHolds } isPlaceholder={ isPlaceholder } />
 			) }
 			{ warnings.length > 0 && <WarningList warnings={ warnings } /> }
 
@@ -155,17 +163,11 @@ export const EligibilityWarnings = ( {
 	);
 };
 
-EligibilityWarnings.propTypes = {
-	onProceed: PropTypes.func,
-	backUrl: PropTypes.string,
-	translate: PropTypes.func,
-};
-
 EligibilityWarnings.defaultProps = {
 	onProceed: noop,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = ( state: object ) => {
 	const siteId = getSelectedSiteId( state );
 	const siteSlug = getSelectedSiteSlug( state );
 	const eligibilityData = getEligibility( state, siteId );
@@ -173,9 +175,9 @@ const mapStateToProps = state => {
 	const eligibilityHolds = get( eligibilityData, 'eligibilityHolds', [] );
 	const hasBusinessPlan = ! includes( eligibilityHolds, 'NO_BUSINESS_PLAN' );
 	const isJetpack = isJetpackSite( state, siteId );
-	const isVip = isVipSite( state, siteId );
+	const isVip = siteId !== null && isVipSite( state, siteId );
 	const dataLoaded = !! eligibilityData.lastUpdate;
-	const sitePlan = getSitePlan( state, siteId );
+	const sitePlan = siteId !== null ? getSitePlan( state, siteId ) : null;
 
 	return {
 		eligibilityData,
@@ -197,8 +199,12 @@ const mapDispatchToProps = {
 		recordTracksEvent( 'calypso_automated_transfer_eligibilty_click_proceed', eventProperties ),
 };
 
-const mergeProps = ( stateProps, dispatchProps, ownProps ) => {
-	let context;
+const mergeProps = (
+	stateProps: ReturnType< typeof mapStateToProps >,
+	dispatchProps: typeof mapDispatchToProps,
+	ownProps: ExternalProps
+) => {
+	let context: string | null = null;
 	if ( includes( ownProps.backUrl, 'plugins' ) ) {
 		context = 'plugins';
 	} else if ( includes( ownProps.backUrl, 'themes' ) ) {
@@ -212,7 +218,15 @@ const mergeProps = ( stateProps, dispatchProps, ownProps ) => {
 		ownProps.onProceed();
 		dispatchProps.trackProceed( { context } );
 	};
-	return Object.assign( {}, ownProps, stateProps, dispatchProps, { onCancel, onProceed, context } );
+
+	return {
+		...ownProps,
+		...stateProps,
+		...dispatchProps,
+		onCancel,
+		onProceed,
+		context,
+	};
 };
 
 export default connect(
