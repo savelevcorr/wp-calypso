@@ -40,6 +40,7 @@ import { getUnformattedDomainPrice, getUnformattedDomainSalePrice } from 'lib/do
 import formatCurrency from '@automattic/format-currency/src';
 import { getPreference } from 'state/preferences/selectors';
 import { savePreference } from 'state/preferences/actions';
+import { getSectionName } from 'state/ui/selectors';
 import AsyncLoad from 'components/async-load';
 
 const DOMAIN_UPSELL_NUDGE_DISMISS_KEY = 'domain_upsell_nudge_dismiss';
@@ -270,7 +271,7 @@ export class SiteNotice extends React.Component {
 	}
 
 	render() {
-		const { site } = this.props;
+		const { site, sectionName } = this.props;
 		if ( ! site ) {
 			return <div className="current-site__notices" />;
 		}
@@ -288,7 +289,7 @@ export class SiteNotice extends React.Component {
 					( config.isEnabled( 'jitms' ) && (
 						<AsyncLoad
 							require="blocks/jitm"
-							messagePath={ `calypso:sidebar_notice` }
+							messagePath={ `calypso:${ sectionName }:sidebar_notice` }
 							template="sidebar-banner"
 						/>
 					) ) }
@@ -307,6 +308,7 @@ export class SiteNotice extends React.Component {
 export default connect(
 	( state, ownProps ) => {
 		const siteId = ownProps.site && ownProps.site.ID ? ownProps.site.ID : null;
+
 		return {
 			isDomainOnly: isDomainOnlySite( state, siteId ),
 			isEligibleForFreeToPaidUpsell: isEligibleForFreeToPaidUpsell( state, siteId ),
@@ -320,6 +322,7 @@ export default connect(
 			isPlanOwner: isCurrentUserCurrentPlanOwner( state, siteId ),
 			currencyCode: getCurrentUserCurrencyCode( state ),
 			domainUpsellNudgeDismissedDate: getPreference( state, DOMAIN_UPSELL_NUDGE_DISMISS_KEY ),
+			sectionName: getSectionName( state ),
 		};
 	},
 	dispatch => {
