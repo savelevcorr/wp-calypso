@@ -76,6 +76,7 @@ const nodeModulesToTranspile = [
 	'regenerate-unicode-properties/',
 	'regexpu-core/',
 	'striptags',
+	'superagent',
 	'unicode-match-property-ecmascript/',
 	'unicode-match-property-value-ecmascript/',
 ];
