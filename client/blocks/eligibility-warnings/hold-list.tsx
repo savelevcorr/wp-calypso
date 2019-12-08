@@ -11,7 +11,7 @@ import Gridicon from 'components/gridicon';
  */
 import Button from 'components/button';
 import Card from 'components/card';
-import SectionHeader from 'components/section-header';
+import CardHeading from 'components/card-heading';
 import { localizeUrl } from 'lib/i18n-utils';
 
 // Mapping eligibility holds to messages that will be shown to the user
@@ -102,23 +102,20 @@ function getHoldMessages( translate: LocalizeProps[ 'translate' ] ) {
 }
 
 interface ExternalProps {
+	context: string | null;
 	holds: string[];
 	isPlaceholder: boolean;
 }
 
 type Props = ExternalProps & LocalizeProps;
 
-export const HoldList = ( { holds, isPlaceholder, translate }: Props ) => {
+export const HoldList = ( { context, holds, isPlaceholder, translate }: Props ) => {
 	const holdMessages = getHoldMessages( translate );
 
 	return (
 		<div>
-			<SectionHeader
-				label={ translate( 'Please resolve this issue:', 'Please resolve these issues:', {
-					count: holds.length,
-				} ) }
-			/>
 			<Card className="eligibility-warnings__hold-list">
+				<CardHeading>{ getCardHeading( context, translate ) }</CardHeading>
 				{ isPlaceholder && (
 					<div>
 						<div className="eligibility-warnings__hold">
@@ -135,18 +132,17 @@ export const HoldList = ( { holds, isPlaceholder, translate }: Props ) => {
 					map( holds, hold =>
 						! isKnownHoldType( hold, holdMessages ) ? null : (
 							<div className="eligibility-warnings__hold" key={ hold }>
-								<Gridicon icon="notice-outline" size={ 24 } />
+								<Gridicon icon="checkmark-circle" size={ 24 } />
 								<div className="eligibility-warnings__message">
-									<span className="eligibility-warnings__message-title">
+									<div className="eligibility-warnings__message-title">
 										{ holdMessages[ hold ].title }
-									</span>
-									:&nbsp;
-									<span className="eligibility-warnings__message-description">
+									</div>
+									<div className="eligibility-warnings__message-description">
 										{ holdMessages[ hold ].description }
-									</span>
+									</div>
 								</div>
 								{ holdMessages[ hold ].supportUrl && (
-									<div className="eligibility-warnings__action">
+									<div className="eligibility-warnings__hold-action">
 										<Button
 											compact
 											href={ holdMessages[ hold ].supportUrl }
@@ -163,6 +159,17 @@ export const HoldList = ( { holds, isPlaceholder, translate }: Props ) => {
 		</div>
 	);
 };
+
+function getCardHeading( context: string | null, translate: LocalizeProps[ 'translate' ] ) {
+	switch ( context ) {
+		case 'plugins':
+			return translate( "To install plugins, you'll need a couple things:" );
+		case 'themes':
+			return translate( "To install themes, you'll need a couple things:" );
+		default:
+			return translate( "To continue, you'll need a couple things:" );
+	}
+}
 
 function isKnownHoldType(
 	hold: string,
